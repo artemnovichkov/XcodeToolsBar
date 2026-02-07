@@ -36,26 +36,19 @@ struct StatsView: View {
     // MARK: - Stats Content
 
     private func statsContent(_ stats: StatsCache) -> some View {
-        ScrollView {
-            VStack(alignment: .leading, spacing: 12) {
-                headerSection(stats)
-                Divider()
-                todaySection()
-                Divider()
-                dailyChartSection()
-                Divider()
+        VStack(alignment: .leading, spacing: 8) {
+            headerSection(stats)
+            todaySection()
+            dailyChartSection()
+            HStack(spacing: 8) {
                 allTimeSection(stats)
-                Divider()
                 longestSessionSection(stats)
-                Divider()
-                modelUsageSection(stats)
-                Divider()
-                hourlyChartSection()
-                Divider()
-                footerSection()
             }
-            .padding()
+            modelUsageSection(stats)
+            hourlyChartSection()
+            footerSection()
         }
+        .padding(12)
     }
 
     // MARK: - Header
@@ -65,7 +58,7 @@ struct StatsView: View {
             VStack(alignment: .leading, spacing: 2) {
                 Text("Claude Agent Stats")
                     .font(.headline)
-                Text("Updated: \(stats.lastComputedDate)")
+                Text("Updated: \(stats.lastComputedDate, format: .dateTime.day().month().year())")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
@@ -115,14 +108,14 @@ struct StatsView: View {
 
     private func allTimeSection(_ stats: StatsCache) -> some View {
         GroupBox("All Time") {
-            VStack(spacing: 6) {
-                row("Total Sessions", value: "\(stats.totalSessions)")
-                row("Total Messages", value: "\(stats.totalMessages)")
+            VStack(spacing: 4) {
+                row("Sessions", value: "\(stats.totalSessions)")
+                row("Messages", value: "\(stats.totalMessages)")
                 if let days = viewModel.daysSinceFirstSession {
-                    row("Days Active", value: "\(days)")
+                    row("Days", value: "\(days)")
                 }
                 if let peakHour = viewModel.peakHour {
-                    row("Peak Hour", value: peakHour)
+                    row("Peak", value: peakHour)
                 }
             }
         }
@@ -131,8 +124,8 @@ struct StatsView: View {
     // MARK: - Longest Session
 
     private func longestSessionSection(_ stats: StatsCache) -> some View {
-        GroupBox("Longest Session") {
-            VStack(spacing: 6) {
+        GroupBox("Best Session") {
+            VStack(spacing: 4) {
                 if let duration = viewModel.formattedLongestSessionDuration {
                     row("Duration", value: duration)
                 }
@@ -148,19 +141,16 @@ struct StatsView: View {
 
     private func modelUsageSection(_ stats: StatsCache) -> some View {
         GroupBox("Model Usage") {
-            VStack(alignment: .leading, spacing: 8) {
+            VStack(alignment: .leading, spacing: 6) {
                 ForEach(viewModel.sortedModelNames, id: \.self) { name in
                     if let usage = stats.modelUsage[name] {
-                        VStack(alignment: .leading, spacing: 2) {
-                            Text(shortModelName(name))
-                                .font(.subheadline.bold())
-                            HStack(spacing: 12) {
-                                Text("\(viewModel.formatTokenCount(usage.inputTokens)) in")
-                                Text("\(viewModel.formatTokenCount(usage.outputTokens)) out")
-                                Text("\(viewModel.formatTokenCount(usage.cacheReadInputTokens)) cached")
-                            }
-                            .font(.caption)
-                            .foregroundStyle(.secondary)
+                        HStack {
+                            Text(name)
+                                .font(.subheadline)
+                            Spacer()
+                            Text("\(viewModel.formatTokenCount(usage.inputTokens + usage.outputTokens + usage.cacheReadInputTokens))")
+                                .font(.subheadline)
+                                .foregroundStyle(.secondary)
                         }
                     }
                 }
@@ -217,11 +207,8 @@ struct StatsView: View {
         .font(.subheadline)
     }
 
-    private func shortModelName(_ name: String) -> String {
-        name.replacingOccurrences(of: "claude-", with: "")
-            .replacingOccurrences(of: "-20250929", with: "")
-            .replacingOccurrences(of: "-20251101", with: "")
-            .replacingOccurrences(of: "-", with: " ")
-            .capitalized
-    }
 }
+#Preview {
+    StatsView()
+}
+
