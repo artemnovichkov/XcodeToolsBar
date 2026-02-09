@@ -1,10 +1,10 @@
 import Testing
 import Foundation
-@testable import CodexAgentBar
+import StatsClient
 
 @Suite("StatsCache Parsing Tests")
 struct StatsCacheTests {
-    
+
     @Test("Decodes complete stats cache JSON")
     func decodesCompleteJSON() throws {
         let json = """
@@ -53,10 +53,10 @@ struct StatsCacheTests {
           "totalSpeculationTimeSavedMs": 0
         }
         """
-        
+
         let data = json.data(using: .utf8)!
         let stats = try StatsCache.decode(from: data)
-        
+
         #expect(stats.version == 1)
         #expect(stats.totalSessions == 49)
         #expect(stats.totalMessages == 600)
@@ -64,7 +64,7 @@ struct StatsCacheTests {
         #expect(stats.dailyActivity[0].messageCount == 92)
         #expect(stats.longestSession.duration == 454137)
     }
-    
+
     @Test("Decodes date-only format (yyyy-MM-dd)")
     func decodesDateOnlyFormat() throws {
         let json = """
@@ -87,17 +87,17 @@ struct StatsCacheTests {
           "totalSpeculationTimeSavedMs": 0
         }
         """
-        
+
         let data = json.data(using: .utf8)!
         let stats = try StatsCache.decode(from: data)
-        
+
         let calendar = Calendar.current
         let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: stats.lastComputedDate)
         #expect(components.year == 2026)
         #expect(components.month == 2)
         #expect(components.day == 6)
     }
-    
+
     @Test("Decodes ISO8601 with fractional seconds")
     func decodesISO8601WithFractionalSeconds() throws {
         let json = """
@@ -120,10 +120,10 @@ struct StatsCacheTests {
           "totalSpeculationTimeSavedMs": 0
         }
         """
-        
+
         let data = json.data(using: .utf8)!
         let stats = try StatsCache.decode(from: data)
-        
+
         let calendar = Calendar.current
         let components = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: stats.firstSessionDate)
         #expect(components.year == 2026)
@@ -132,7 +132,7 @@ struct StatsCacheTests {
         #expect(components.hour == 20)
         #expect(components.minute == 0)
     }
-    
+
     @Test("Decodes daily activity dates")
     func decodesDailyActivityDates() throws {
         let json = """
@@ -153,20 +153,20 @@ struct StatsCacheTests {
           "totalSpeculationTimeSavedMs": 0
         }
         """
-        
+
         let data = json.data(using: .utf8)!
         let stats = try StatsCache.decode(from: data)
-        
+
         #expect(stats.dailyActivity.count == 2)
-        
+
         let calendar = Calendar.current
         let firstDay = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: stats.dailyActivity[0].date)
         #expect(firstDay.day == 3)
-        
+
         let secondDay = calendar.dateComponents(in: TimeZone(identifier: "UTC")!, from: stats.dailyActivity[1].date)
         #expect(secondDay.day == 4)
     }
-    
+
     @Test("Decodes model usage")
     func decodesModelUsage() throws {
         let json = """
@@ -186,10 +186,10 @@ struct StatsCacheTests {
           "totalSpeculationTimeSavedMs": 0
         }
         """
-        
+
         let data = json.data(using: .utf8)!
         let stats = try StatsCache.decode(from: data)
-        
+
         let usage = stats.modelUsage["claude-sonnet"]
         #expect(usage?.inputTokens == 100)
         #expect(usage?.outputTokens == 200)
