@@ -26,11 +26,6 @@ final class StatsViewModel {
 
     // MARK: - Computed Properties
 
-    var todayActivity: DailyActivity? {
-        let calendar = Calendar.current
-        return stats?.dailyActivity.first { calendar.isDateInToday($0.date) }
-    }
-
     var daysSinceFirstSession: Int? {
         guard let firstDate = stats?.firstSessionDate else { return nil }
         return Calendar.current.dateComponents([.day], from: firstDate, to: Date()).day

@@ -38,7 +38,6 @@ struct StatsView: View {
     private func statsContent(_ stats: StatsCache) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             headerSection(stats)
-            todaySection()
             dailyChartSection()
             summarySection(stats)
             modelUsageSection(stats)
@@ -71,29 +70,6 @@ struct StatsView: View {
                     .foregroundStyle(.secondary)
             }
             .buttonStyle(.plain)
-        }
-    }
-
-    // MARK: - Today
-
-    private func todaySection() -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            sectionHeader("Today")
-            if let today = viewModel.todayActivity {
-                HStack(spacing: 0) {
-                    statPill(value: "\(today.messageCount)", label: "Messages", color: .blue)
-                    Spacer()
-                    statPill(value: "\(today.sessionCount)", label: "Sessions", color: .green)
-                    Spacer()
-                    statPill(value: "\(today.toolCallCount)", label: "Tools", color: .orange)
-                }
-            } else {
-                Text("No activity yet")
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .padding(.vertical, 4)
-            }
         }
     }
 
@@ -212,17 +188,6 @@ struct StatsView: View {
         Text(title)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.secondary)
-    }
-
-    private func statPill(value: String, label: String, color: Color) -> some View {
-        VStack(spacing: 2) {
-            Text(value)
-                .font(.title2.bold().monospacedDigit())
-                .foregroundStyle(color)
-            Text(label)
-                .font(.caption)
-                .foregroundStyle(.secondary)
-        }
     }
 
     private func row(_ label: String, value: String) -> some View {
