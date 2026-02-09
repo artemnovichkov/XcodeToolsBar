@@ -6,7 +6,7 @@ enum ActivityMetric: String, CaseIterable {
     case messages = "Messages"
     case sessions = "Sessions"
     case toolCalls = "Tool Calls"
-    
+
     var color: Color {
         switch self {
         case .messages: .blue
@@ -20,7 +20,7 @@ struct DailyActivityChart: View {
     let activities: [DailyActivity]
     @State private var selectedMetric: ActivityMetric = .messages
     @State private var selectedDate: Date?
-    
+
     private var selectedActivity: DailyActivity? {
         guard let selectedDate else { return nil }
         return activities.first { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
@@ -47,7 +47,7 @@ struct DailyActivityChart: View {
             }
             .padding(2)
             .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 6))
-            
+
             Chart(activities) { activity in
                 BarMark(
                     x: .value("Date", activity.date, unit: .day),
@@ -55,7 +55,7 @@ struct DailyActivityChart: View {
                 )
                 .foregroundStyle(selectedMetric.color.gradient)
                 .opacity(selectedActivity == nil || selectedActivity?.date == activity.date ? 1.0 : 0.5)
-                
+
                 if let selected = selectedActivity, Calendar.current.isDate(selected.date, inSameDayAs: activity.date) {
                     RuleMark(x: .value("Date", activity.date, unit: .day))
                         .foregroundStyle(.gray.opacity(0.3))
@@ -83,7 +83,7 @@ struct DailyActivityChart: View {
             .frame(height: 70)
         }
     }
-    
+
     private func value(for activity: DailyActivity) -> Int {
         switch selectedMetric {
         case .messages: activity.messageCount
@@ -92,6 +92,7 @@ struct DailyActivityChart: View {
         }
     }
 }
+
 #Preview {
     DailyActivityChart(activities: [
         DailyActivity(date: Date().addingTimeInterval(-6 * 86400), messageCount: 45, sessionCount: 3, toolCallCount: 120),

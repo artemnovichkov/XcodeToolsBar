@@ -13,7 +13,7 @@ struct HourlyDistributionChart: View {
             )
             .foregroundStyle(.orange.gradient)
             .opacity(selectedHour == nil || selectedHour == entry.hour ? 1.0 : 0.5)
-            
+
             if let selected = selectedHour, selected == entry.hour {
                 RuleMark(x: .value("Hour", entry.hour))
                     .foregroundStyle(.gray.opacity(0.3))

@@ -2,10 +2,14 @@ import SwiftUI
 import Charts
 import StatsClient
 
-struct StatsView: View {
+public struct StatsView: View {
     @State var viewModel: StatsViewModel
 
-    var body: some View {
+    public init(viewModel: StatsViewModel) {
+        self.viewModel = viewModel
+    }
+
+    public var body: some View {
         Group {
             if let error = viewModel.error, viewModel.stats == nil {
                 errorView(error)
@@ -194,4 +198,3 @@ struct StatsView: View {
 #Preview("Empty") {
     StatsView(viewModel: StatsViewModel(statsClient: .empty))
 }
-
