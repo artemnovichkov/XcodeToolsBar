@@ -19,18 +19,6 @@ public final class StatsViewModel {
 
     // MARK: - Computed Properties
 
-    var daysSinceFirstSession: Int? {
-        guard let firstDate = stats?.firstSessionDate else { return nil }
-        return Calendar.current.dateComponents([.day], from: firstDate, to: .now).day
-    }
-
-    var peakHourDate: Date? {
-        guard let hourCounts = stats?.hourCounts,
-              let maxEntry = hourCounts.max(by: { $0.value < $1.value }),
-              let hour = Int(maxEntry.key) else { return nil }
-        return Calendar.current.date(from: DateComponents(hour: hour))
-    }
-
     var sortedModelNames: [String] {
         stats?.modelUsage.keys.sorted() ?? []
     }

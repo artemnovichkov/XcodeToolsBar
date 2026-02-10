@@ -37,7 +37,7 @@ public struct StatsView: View {
         VStack(alignment: .leading, spacing: 16) {
             headerSection(stats)
             dailyChartSection()
-            summarySection(stats)
+            SummaryView(stats: stats)
             modelUsageSection(stats)
             hourlyChartSection()
             footerSection()
@@ -77,42 +77,6 @@ public struct StatsView: View {
                     .frame(height: 70)
             }
         }
-    }
-
-    // MARK: - Summary (All Time + Best Session)
-
-    private func summarySection(_ stats: StatsCache) -> some View {
-        HStack(alignment: .top, spacing: 0) {
-            VStack(alignment: .leading, spacing: 6) {
-                sectionHeader("All Time")
-                VStack(spacing: 3) {
-                    row("Sessions", value: "\(stats.totalSessions)")
-                    row("Messages", value: "\(stats.totalMessages)")
-                    if let days = viewModel.daysSinceFirstSession {
-                        row("Days", value: "\(days)")
-                    }
-                    if let peakHour = viewModel.peakHourDate {
-                        row("Peak", value: Text(peakHour, format: .dateTime.hour().minute()))
-                    }
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-
-            Divider()
-                .padding(.horizontal, 10)
-
-            VStack(alignment: .leading, spacing: 6) {
-                sectionHeader("Longest Session")
-                VStack(spacing: 3) {
-                    row("Duration", value: Text(Duration.milliseconds(stats.longestSession.duration), format: .units(allowed: [.hours, .minutes, .seconds], width: .narrow, maximumUnitCount: 2)))
-                    row("Messages", value: "\(stats.longestSession.messageCount)")
-                    row("Date", value: Text(stats.longestSession.timestamp, format: .dateTime.day().month().year()))
-                }
-            }
-            .frame(maxWidth: .infinity, alignment: .leading)
-        }
-        .padding(10)
-        .background(.quaternary.opacity(0.5), in: RoundedRectangle(cornerRadius: 8))
     }
 
     // MARK: - Model Usage
@@ -174,21 +138,6 @@ public struct StatsView: View {
         Text(title)
             .font(.subheadline.weight(.semibold))
             .foregroundStyle(.secondary)
-    }
-
-    private func row(_ label: String, value: String) -> some View {
-        row(label, value: Text(value))
-    }
-
-    private func row(_ label: String, value: Text) -> some View {
-        HStack {
-            Text(label)
-                .foregroundStyle(.secondary)
-            Spacer()
-            value
-                .fontWeight(.medium)
-        }
-        .font(.subheadline)
     }
 }
 

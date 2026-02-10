@@ -8,7 +8,7 @@
 import Foundation
 
 extension StatsCache {
-    static var mock: StatsCache {
+    public static var mock: StatsCache {
         let calendar = Calendar.current
         let today = Date()
 
