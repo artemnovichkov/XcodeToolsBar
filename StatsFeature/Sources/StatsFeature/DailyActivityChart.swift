@@ -17,16 +17,46 @@ enum ActivityMetric: String, CaseIterable {
 }
 
 struct DailyActivityChart: View {
-    let activities: [DailyActivity]
+    let stats: StatsCache
     @State private var selectedMetric: ActivityMetric = .messages
     @State private var selectedDate: Date?
+
+    private var activities: [DailyActivity] {
+        let calendar = Calendar.current
+        let today = calendar.startOfDay(for: Date())
+        guard let weekStart = calendar.dateInterval(of: .weekOfYear, for: today)?.start else { return [] }
+
+        return (0..<7).map { offset in
+            let day = calendar.date(byAdding: .day, value: offset, to: weekStart)!
+            if let match = stats.dailyActivity.first(where: { calendar.isDate($0.date, inSameDayAs: day) }) {
+                return match
+            }
+            return DailyActivity(date: day, messageCount: 0, sessionCount: 0, toolCallCount: 0)
+        }
+    }
 
     private var selectedActivity: DailyActivity? {
         guard let selectedDate else { return nil }
         return activities.first { Calendar.current.isDate($0.date, inSameDayAs: selectedDate) }
     }
 
+    private var hasActivity: Bool {
+        activities.contains { $0.messageCount > 0 || $0.sessionCount > 0 || $0.toolCallCount > 0 }
+    }
+
     var body: some View {
+        if hasActivity {
+            content
+        } else {
+            Text("No activity this week")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+                .frame(maxWidth: .infinity, alignment: .center)
+                .frame(height: 70)
+        }
+    }
+
+    private var content: some View {
         VStack(spacing: 12) {
             HStack(spacing: 1) {
                 ForEach(ActivityMetric.allCases, id: \.self) { metric in
@@ -94,14 +124,6 @@ struct DailyActivityChart: View {
 }
 
 #Preview {
-    DailyActivityChart(activities: [
-        DailyActivity(date: Date().addingTimeInterval(-6 * 86400), messageCount: 45, sessionCount: 3, toolCallCount: 120),
-        DailyActivity(date: Date().addingTimeInterval(-5 * 86400), messageCount: 78, sessionCount: 5, toolCallCount: 200),
-        DailyActivity(date: Date().addingTimeInterval(-4 * 86400), messageCount: 32, sessionCount: 2, toolCallCount: 85),
-        DailyActivity(date: Date().addingTimeInterval(-3 * 86400), messageCount: 91, sessionCount: 6, toolCallCount: 250),
-        DailyActivity(date: Date().addingTimeInterval(-2 * 86400), messageCount: 56, sessionCount: 4, toolCallCount: 150),
-        DailyActivity(date: Date().addingTimeInterval(-1 * 86400), messageCount: 67, sessionCount: 4, toolCallCount: 180),
-        DailyActivity(date: Date(), messageCount: 23, sessionCount: 2, toolCallCount: 60),
-    ])
-    .padding()
+    DailyActivityChart(stats: .mock)
+        .padding()
 }

@@ -1,11 +1,31 @@
 import SwiftUI
 import Charts
+import StatsClient
 
 struct HourlyDistributionChart: View {
-    let hourCounts: [(hour: Int, count: Int)]
+    let stats: StatsCache
     @State private var selectedHour: Int?
 
+    private var hourCounts: [(hour: Int, count: Int)] {
+        stats.hourCounts
+            .compactMap { key, value in
+                guard let hour = Int(key) else { return nil }
+                return (hour: hour, count: value)
+            }
+            .sorted { $0.hour < $1.hour }
+    }
+
     var body: some View {
+        if hourCounts.isEmpty {
+            Text("No data")
+                .font(.subheadline)
+                .foregroundStyle(.tertiary)
+        } else {
+            content
+        }
+    }
+
+    private var content: some View {
         Chart(hourCounts, id: \.hour) { entry in
             BarMark(
                 x: .value("Hour", entry.hour),
@@ -52,11 +72,6 @@ struct HourlyDistributionChart: View {
 }
 
 #Preview {
-    HourlyDistributionChart(hourCounts: [
-        (0, 2), (1, 1), (2, 0), (3, 0), (4, 0), (5, 1),
-        (6, 3), (7, 5), (8, 12), (9, 18), (10, 22), (11, 25),
-        (12, 20), (13, 15), (14, 28), (15, 32), (16, 35), (17, 30),
-        (18, 22), (19, 18), (20, 15), (21, 10), (22, 6), (23, 3)
-    ])
-    .padding()
+    HourlyDistributionChart(stats: .mock)
+        .padding()
 }

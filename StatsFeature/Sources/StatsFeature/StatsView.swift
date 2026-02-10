@@ -36,10 +36,10 @@ public struct StatsView: View {
     private func statsContent(_ stats: StatsCache) -> some View {
         VStack(alignment: .leading, spacing: 16) {
             headerSection(stats)
-            dailyChartSection()
+            dailyChartSection(stats)
             SummaryView(stats: stats)
-            modelUsageSection(stats)
-            hourlyChartSection()
+            ModelUsageView(stats: stats)
+            hourlyChartSection(stats)
             footerSection()
         }
         .padding(16)
@@ -64,57 +64,19 @@ public struct StatsView: View {
 
     // MARK: - Daily Chart
 
-    private func dailyChartSection() -> some View {
+    private func dailyChartSection(_ stats: StatsCache) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             sectionHeader("Daily Activity")
-            if viewModel.hasRecentActivity {
-                DailyActivityChart(activities: viewModel.recentDailyActivity)
-            } else {
-                Text("No activity this week")
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-                    .frame(maxWidth: .infinity, alignment: .center)
-                    .frame(height: 70)
-            }
-        }
-    }
-
-    // MARK: - Model Usage
-
-    private func modelUsageSection(_ stats: StatsCache) -> some View {
-        VStack(alignment: .leading, spacing: 8) {
-            sectionHeader("Models")
-            VStack(spacing: 4) {
-                ForEach(viewModel.sortedModelNames, id: \.self) { name in
-                    if let usage = stats.modelUsage[name] {
-                        let totalTokens = usage.inputTokens + usage.outputTokens + usage.cacheReadInputTokens
-                        HStack {
-                            Text(viewModel.shortModelName(name))
-                                .font(.subheadline)
-                            Spacer()
-                            Text(totalTokens, format: .number.notation(.compactName))
-                                .font(.subheadline.monospacedDigit())
-                                .foregroundStyle(.secondary)
-                        }
-                    }
-                }
-            }
+            DailyActivityChart(stats: stats)
         }
     }
 
     // MARK: - Hourly Chart
 
-    private func hourlyChartSection() -> some View {
+    private func hourlyChartSection(_ stats: StatsCache) -> some View {
         VStack(alignment: .leading, spacing: 8) {
             sectionHeader("Hourly Distribution")
-            let hourCounts = viewModel.sortedHourCounts
-            if hourCounts.isEmpty {
-                Text("No data")
-                    .font(.subheadline)
-                    .foregroundStyle(.tertiary)
-            } else {
-                HourlyDistributionChart(hourCounts: hourCounts)
-            }
+            HourlyDistributionChart(stats: stats)
         }
     }
 
