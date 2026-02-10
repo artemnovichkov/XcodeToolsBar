@@ -55,7 +55,7 @@ public struct StatsView: View {
             VStack(alignment: .leading, spacing: 1) {
                 Text("Claude Agent")
                     .font(.headline)
-                Text(stats.lastComputedDate, format: .dateTime.day().month().year())
+                Text("Updated at: \(stats.lastComputedDate, format: .dateTime.day().month().year())")
                     .font(.caption)
                     .foregroundStyle(.secondary)
             }
