@@ -1,6 +1,6 @@
 import Foundation
 
-public struct StatsCache: Codable, Sendable {
+public struct StatsCache: Decodable, Sendable {
     public let version: Int
     public let lastComputedDate: Date
     public let dailyActivity: [DailyActivity]
@@ -14,7 +14,7 @@ public struct StatsCache: Codable, Sendable {
     public let totalSpeculationTimeSavedMs: Int?
 }
 
-public struct DailyActivity: Codable, Identifiable, Sendable {
+public struct DailyActivity: Decodable, Identifiable, Sendable {
     public let date: Date
     public let messageCount: Int
     public let sessionCount: Int
@@ -30,12 +30,12 @@ public struct DailyActivity: Codable, Identifiable, Sendable {
     }
 }
 
-public struct DailyModelTokens: Codable, Sendable {
+public struct DailyModelTokens: Decodable, Sendable {
     public let date: Date
     public let tokensByModel: [String: Int]
 }
 
-public struct ModelUsage: Codable, Sendable {
+public struct ModelUsage: Decodable, Sendable {
     public let inputTokens: Int
     public let outputTokens: Int
     public let cacheReadInputTokens: Int
@@ -46,7 +46,7 @@ public struct ModelUsage: Codable, Sendable {
     public let maxOutputTokens: Int?
 }
 
-public struct LongestSession: Codable, Sendable {
+public struct LongestSession: Decodable, Sendable {
     public let sessionId: String
     public let duration: Int
     public let messageCount: Int

@@ -49,19 +49,11 @@
 			name = Frameworks;
 			sourceTree = "<group>";
 		};
-		06A16EFD2F3729DE0008930B /* CodexAgentBarTests */ = {
-			isa = PBXGroup;
-			children = (
-			);
-			path = CodexAgentBarTests;
-			sourceTree = "<group>";
-		};
 		AA300001 = {
 			isa = PBXGroup;
 			children = (
 				AA300002 /* CodexAgentBar */,
 				AA300006 /* Products */,
-				06A16EFD2F3729DE0008930B /* CodexAgentBarTests */,
 				061303FA2F3A3BD300486BE8 /* Frameworks */,
 			);
 			sourceTree = "<group>";
