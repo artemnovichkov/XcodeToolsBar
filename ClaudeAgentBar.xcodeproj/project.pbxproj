@@ -10,11 +10,13 @@
 		061303F92F3A3A8500486BE8 /* StatsClient in Frameworks */ = {isa = PBXBuildFile; productRef = 061303F82F3A3A8500486BE8 /* StatsClient */; };
 		061303FC2F3A3BD300486BE8 /* StatsClientLive in Frameworks */ = {isa = PBXBuildFile; productRef = 061303FB2F3A3BD300486BE8 /* StatsClientLive */; };
 		061303FF2F3A42F500486BE8 /* StatsFeature in Frameworks */ = {isa = PBXBuildFile; productRef = 061303FE2F3A42F500486BE8 /* StatsFeature */; };
+		064BADF52F3E23F900F6F244 /* AppIcon.icon in Resources */ = {isa = PBXBuildFile; fileRef = 064BADF42F3E23F900F6F244 /* AppIcon.icon */; };
 		AA000001 /* MainApp.swift in Sources */ = {isa = PBXBuildFile; fileRef = AA100001 /* MainApp.swift */; };
 		AA000007 /* Assets.xcassets in Resources */ = {isa = PBXBuildFile; fileRef = AA100007 /* Assets.xcassets */; };
 /* End PBXBuildFile section */
 
 /* Begin PBXFileReference section */
+		064BADF42F3E23F900F6F244 /* AppIcon.icon */ = {isa = PBXFileReference; lastKnownFileType = folder.iconcomposer.icon; path = AppIcon.icon; sourceTree = "<group>"; };
 		AA100001 /* MainApp.swift */ = {isa = PBXFileReference; lastKnownFileType = sourcecode.swift; path = MainApp.swift; sourceTree = "<group>"; };
 		AA100007 /* Assets.xcassets */ = {isa = PBXFileReference; lastKnownFileType = folder.assetcatalog; path = Assets.xcassets; sourceTree = "<group>"; };
 		AA100008 /* Info.plist */ = {isa = PBXFileReference; lastKnownFileType = text.plist.xml; path = Info.plist; sourceTree = "<group>"; };
@@ -52,6 +54,7 @@
 		AA300001 = {
 			isa = PBXGroup;
 			children = (
+				064BADF42F3E23F900F6F244 /* AppIcon.icon */,
 				AA300002 /* ClaudeAgentBar */,
 				AA300006 /* Products */,
 				061303FA2F3A3BD300486BE8 /* Frameworks */,
@@ -140,6 +143,7 @@
 			buildActionMask = 2147483647;
 			files = (
 				AA000007 /* Assets.xcassets in Resources */,
+				064BADF52F3E23F900F6F244 /* AppIcon.icon in Resources */,
 			);
 			runOnlyForDeploymentPostprocessing = 0;
 		};
